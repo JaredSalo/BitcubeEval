@@ -30,4 +30,3 @@ class MyApp extends StatelessWidget {
 }
 
 // Classes moved to external file.
->>>>>>> Initial design commit
