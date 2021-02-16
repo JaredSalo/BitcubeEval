@@ -21,7 +21,6 @@ class Student {
   String fullName = "";
   String dob = "";
   Degree degree;
-  int id;
 
   Student({
     this.degree,
@@ -31,7 +30,6 @@ class Student {
     this.forenames,
     this.fullName,
     this.lastnames,
-    this.id,
   });
 }
 

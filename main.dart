@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:web_salo/pages/WrapperPage.dart';
+
+import 'misc/services/Provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,10 +23,17 @@ class _AppState extends State<App> {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BitCubeEVAL Platform',
-      debugShowCheckedModeBanner: false,
-      home: WrapperPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => Settings(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'BitCubeEVAL Platform',
+        debugShowCheckedModeBanner: false,
+        home: WrapperPage(),
+      ),
     );
   }
 }
