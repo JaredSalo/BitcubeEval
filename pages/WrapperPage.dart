@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -16,6 +18,15 @@ class _WrapperPageState extends State<WrapperPage> {
   bool menuOpen = true;
   bool detailOpen = false;
   String menuItem = "lecturer";
+  bool readyDelete = false;
+
+  void startTimer() {
+    Timer(Duration(milliseconds: 3000), () {
+      setState(() {
+        readyDelete = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -908,6 +919,65 @@ class _WrapperPageState extends State<WrapperPage> {
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w300),
+                                                ),
+                                                Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0),
+                                                    child: MouseRegion(
+                                                      cursor: SystemMouseCursors
+                                                          .click,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          if (!readyDelete) {
+                                                            setState(() {
+                                                              readyDelete =
+                                                                  true;
+                                                            });
+                                                            startTimer();
+                                                          } else {
+                                                            var doc = firestore
+                                                                .collection(
+                                                                    "students")
+                                                                .where("email",
+                                                                    isEqualTo: settings
+                                                                            .dataMap[
+                                                                        'email'])
+                                                                .get();
+
+                                                            doc.then((value) {
+                                                              value.docs.forEach(
+                                                                  (element) {
+                                                                element
+                                                                    .reference
+                                                                    .delete();
+                                                              });
+                                                            });
+                                                            setState(() {
+                                                              readyDelete =
+                                                                  false;
+                                                            });
+
+                                                            settings
+                                                                .newIndex(-2);
+                                                          }
+                                                        },
+                                                        child: (settings.index >
+                                                                -1)
+                                                            ? Icon(
+                                                                Icons
+                                                                    .cancel_rounded,
+                                                                color: (readyDelete)
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .white,
+                                                                size: 14,
+                                                              )
+                                                            : Container(),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ],
                                             ),
