@@ -15,10 +15,10 @@ class Degree {
 
 class Student {
   String forenames = "";
-  String lastnames = "";
+  String lastname = "";
   String email = "";
-  String firstName = "";
-  String fullName = "";
+  String firstname = "";
+  String fullname = "";
   String dob = "";
   Degree degree;
 
@@ -26,10 +26,10 @@ class Student {
     this.degree,
     this.dob,
     this.email,
-    this.firstName,
+    this.firstname,
     this.forenames,
-    this.fullName,
-    this.lastnames,
+    this.fullname,
+    this.lastname,
   });
 }
 

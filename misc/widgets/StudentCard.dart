@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -356,5 +357,243 @@ class _LecturerCardState extends State<LecturerCard> {
         ),
       ),
     );
+  }
+}
+
+// // // // // // // // // // // // // // // // // // // // // // // // // //
+// // // // // // // // // // AddStudent // // // // // // // // // // // //
+// // // // // // // // // // // // // // // // // // // // // // // // // //
+
+class AddStudent extends StatefulWidget {
+  fs.FirebaseFirestore firestore;
+  AddStudent(this.firestore);
+  @override
+  _AddStudentState createState() => _AddStudentState();
+}
+
+class _AddStudentState extends State<AddStudent> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    var settings = Provider.of<Settings>(context, listen: true);
+
+    return Center(
+        child: Container(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 107,
+                width: 600,
+                child: StreamBuilder(
+                  stream: widget.firestore.collection("degrees").snapshots(),
+                  builder: (context, snapshot) {
+                    var snappy = snapshot.data;
+                    return GridView.builder(
+                      itemCount: snappy.docs.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 4,
+                      ),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () {
+                                  settings
+                                      .newDegree(snappy.docs[index]["name"]);
+                                },
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds: 200),
+                                  // width: 100,
+                                  // height: 50,
+                                  color: (settings.degree ==
+                                          snappy.docs[index]["name"])
+                                      ? Colors.deepOrange
+                                      : Colors.deepOrange[200],
+                                  child: Center(
+                                    child: Text(
+                                      snappy.docs[index]["name"],
+                                      style: GoogleFonts.montserrat(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 215,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          settings.newFirst(value);
+
+                          return null;
+                        },
+                        autocorrect: true,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: Colors.black26,
+                            filled: true,
+                            hintText: 'First names..'),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Container(
+                    width: 215,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          settings.newLast(value);
+
+                          return null;
+                        },
+                        autocorrect: true,
+                        maxLines: 1,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: Colors.black26,
+                            filled: true,
+                            hintText: 'Last name..'),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: 438,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: TextFormField(
+                    onChanged: (value) {
+                      settings.newEmail(value);
+                      return null;
+                    },
+                    autocorrect: true,
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        fillColor: Colors.black26,
+                        filled: true,
+                        hintText: 'Email..'),
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 60,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          settings.newMonth(int.parse(value));
+
+                          return null;
+                        },
+                        autocorrect: true,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: Colors.black26,
+                            filled: true,
+                            hintText: 'MM'),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 60,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          settings.newDay(int.parse(value));
+
+                          return null;
+                        },
+                        autocorrect: true,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            fillColor: Colors.black26,
+                            filled: true,
+                            hintText: 'DD'),
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: 80,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          settings.newYear(int.parse(value));
+
+                          return null;
+                        },
+                        autocorrect: true,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          fillColor: Colors.black26,
+                          filled: true,
+                          hintText: 'YYYY',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 }

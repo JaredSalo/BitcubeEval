@@ -15,7 +15,7 @@ class WrapperPage extends StatefulWidget {
 class _WrapperPageState extends State<WrapperPage> {
   bool menuOpen = true;
   bool detailOpen = false;
-  String menuItem = "student+";
+  String menuItem = "lecturer";
 
   @override
   Widget build(BuildContext context) {
@@ -50,43 +50,47 @@ class _WrapperPageState extends State<WrapperPage> {
                               height: 300,
                               width: 450,
                               // color: Colors.black54,
-                              child: StreamBuilder(
-                                stream: (menuItem == "degree")
-                                    ? firestore
-                                        .collection("degrees")
-                                        .snapshots()
-                                    : (menuItem == "student")
-                                        ? firestore
-                                            .collection("students")
-                                            .snapshots()
-                                        : firestore
-                                            .collection("lecturers")
-                                            .snapshots(),
-                                builder: (context, snapshot) {
-                                  dynamic snappy = snapshot.data;
-                                  return ListView.builder(
-                                    itemCount: snappy.docs.length,
-                                    itemBuilder: (context, index) {
-                                      if (menuItem == "student") {
-                                        return StudentCard(
-                                          snappy: snappy,
-                                          index: index,
+                              child: (menuItem == "student+")
+                                  ? AddStudent(firestore)
+                                  : StreamBuilder(
+                                      stream: (menuItem == "degree")
+                                          ? firestore
+                                              .collection("degrees")
+                                              .snapshots()
+                                          : (menuItem == "student")
+                                              ? firestore
+                                                  .collection("students")
+                                                  .snapshots()
+                                              : firestore
+                                                  .collection("lecturers")
+                                                  .snapshots(),
+                                      builder: (context, snapshot) {
+                                        dynamic snappy = snapshot.data;
+                                        return ListView.builder(
+                                          itemCount: snappy.docs.length,
+                                          itemBuilder: (context, index) {
+                                            if (menuItem == "student") {
+                                              return StudentCard(
+                                                snappy: snappy,
+                                                index: index,
+                                              );
+                                            } else if (menuItem == "degree") {
+                                              return DegreeCard(
+                                                snappy: snappy,
+                                                index: index,
+                                              );
+                                            } else if (menuItem == "lecturer") {
+                                              return LecturerCard(
+                                                snappy: snappy,
+                                                index: index,
+                                              );
+                                            } else {
+                                              return Container();
+                                            }
+                                          },
                                         );
-                                      } else if (menuItem == "degree") {
-                                        return DegreeCard(
-                                          snappy: snappy,
-                                          index: index,
-                                        );
-                                      } else if (menuItem == "lecturer") {
-                                        return LecturerCard(
-                                          snappy: snappy,
-                                          index: index,
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
+                                      },
+                                    ),
                             ),
                           ),
                           ClipRRect(
@@ -109,70 +113,70 @@ class _WrapperPageState extends State<WrapperPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: MouseRegion(
-                                                cursor:
-                                                    SystemMouseCursors.click,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      menuItem = "course";
-                                                    });
-                                                    settings.newIndex(-2);
-                                                  },
-                                                  child: Row(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.bookmark,
-                                                        color: (menuItem ==
-                                                                "course")
-                                                            ? Colors.deepOrange
-                                                            : Colors.white,
-                                                      ),
-                                                      AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds:
-                                                                (menuOpen)
-                                                                    ? 300
-                                                                    : 100),
-                                                        width:
-                                                            (menuOpen) ? 12 : 0,
-                                                      ),
-                                                      AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds:
-                                                                (menuOpen)
-                                                                    ? 200
-                                                                    : 0),
-                                                        width:
-                                                            (menuOpen) ? 60 : 0,
-                                                        height:
-                                                            (menuOpen) ? 15 : 0,
-                                                        child: Text(
-                                                          "Course",
-                                                          style: GoogleFonts.montserrat(
-                                                              color: (menuItem ==
-                                                                      "course")
-                                                                  ? Colors
-                                                                      .deepOrange
-                                                                  : Colors
-                                                                      .white,
-                                                              fontSize:
-                                                                  (menuOpen)
-                                                                      ? 13
-                                                                      : 0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                            // Padding(
+                                            //   padding:
+                                            //       const EdgeInsets.all(8.0),
+                                            //   child: MouseRegion(
+                                            //     cursor:
+                                            //         SystemMouseCursors.click,
+                                            //     child: GestureDetector(
+                                            //       onTap: () {
+                                            //         setState(() {
+                                            //           menuItem = "course";
+                                            //         });
+                                            //         settings.newIndex(-2);
+                                            //       },
+                                            //       child: Row(
+                                            //         children: [
+                                            //           Icon(
+                                            //             Icons.bookmark,
+                                            //             color: (menuItem ==
+                                            //                     "course")
+                                            //                 ? Colors.deepOrange
+                                            //                 : Colors.white,
+                                            //           ),
+                                            //           AnimatedContainer(
+                                            //             duration: Duration(
+                                            //                 milliseconds:
+                                            //                     (menuOpen)
+                                            //                         ? 300
+                                            //                         : 100),
+                                            //             width:
+                                            //                 (menuOpen) ? 12 : 0,
+                                            //           ),
+                                            //           AnimatedContainer(
+                                            //             duration: Duration(
+                                            //                 milliseconds:
+                                            //                     (menuOpen)
+                                            //                         ? 200
+                                            //                         : 0),
+                                            //             width:
+                                            //                 (menuOpen) ? 60 : 0,
+                                            //             height:
+                                            //                 (menuOpen) ? 15 : 0,
+                                            //             child: Text(
+                                            //               "Course",
+                                            //               style: GoogleFonts.montserrat(
+                                            //                   color: (menuItem ==
+                                            //                           "course")
+                                            //                       ? Colors
+                                            //                           .deepOrange
+                                            //                       : Colors
+                                            //                           .white,
+                                            //                   fontSize:
+                                            //                       (menuOpen)
+                                            //                           ? 13
+                                            //                           : 0,
+                                            //                   fontWeight:
+                                            //                       FontWeight
+                                            //                           .w500),
+                                            //             ),
+                                            //           ),
+                                            //         ],
+                                            //       ),
+                                            //     ),
+                                            //   ),
+                                            // ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
@@ -390,7 +394,9 @@ class _WrapperPageState extends State<WrapperPage> {
                                                     onTap: () {
                                                       setState(() {
                                                         menuItem = "student+";
+                                                        menuOpen = true;
                                                       });
+
                                                       settings.newIndex(-2);
                                                     },
                                                     child: Row(
@@ -445,6 +451,166 @@ class _WrapperPageState extends State<WrapperPage> {
                                                   ),
                                                 ),
                                               ),
+                                              Padding(
+                                                padding: EdgeInsets.all(
+                                                    (menuItem == "student+")
+                                                        ? 8.0
+                                                        : 0.0),
+                                                child: MouseRegion(
+                                                  cursor: (settings.month > 0 &&
+                                                          settings.month < 13 &&
+                                                          settings.day > 0 &&
+                                                          settings.month < 31 &&
+                                                          settings.year >
+                                                              1900 &&
+                                                          settings.degree
+                                                              .isNotEmpty &&
+                                                          settings.email
+                                                              .contains("@") &&
+                                                          settings.email
+                                                              .contains(".") &&
+                                                          settings.last
+                                                              .isNotEmpty &&
+                                                          settings
+                                                              .first.isNotEmpty)
+                                                      ? SystemMouseCursors.click
+                                                      : SystemMouseCursors
+                                                          .basic,
+                                                  child: GestureDetector(
+                                                    onTap: (settings.month >
+                                                                0 &&
+                                                            settings.month <
+                                                                13 &&
+                                                            settings.day > 0 &&
+                                                            settings.month <
+                                                                31 &&
+                                                            settings.year >
+                                                                1900 &&
+                                                            settings.degree
+                                                                .isNotEmpty &&
+                                                            settings.email
+                                                                .contains(
+                                                                    "@") &&
+                                                            settings.email
+                                                                .contains(
+                                                                    ".") &&
+                                                            settings.last
+                                                                .isNotEmpty &&
+                                                            settings.first
+                                                                .isNotEmpty)
+                                                        ? () {
+                                                            firestore
+                                                                .collection(
+                                                                    "students")
+                                                                .doc()
+                                                                .set({
+                                                              "dob": DateTime(
+                                                                  settings.year,
+                                                                  settings
+                                                                      .month,
+                                                                  settings.day),
+                                                              "email": settings
+                                                                  .email,
+                                                              "forenames": [
+                                                                settings.first
+                                                              ],
+                                                              "lastname":
+                                                                  settings.last,
+                                                              "degree": settings
+                                                                  .degree,
+                                                            });
+
+                                                            settings
+                                                                .clearStudent();
+                                                            setState(() {
+                                                              menuOpen = false;
+                                                            });
+
+                                                            setState(() {
+                                                              menuItem =
+                                                                  "student";
+                                                            });
+                                                          }
+                                                        : () {},
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              3),
+                                                      child: AnimatedOpacity(
+                                                        opacity: (settings.month >
+                                                                    0 &&
+                                                                settings.month <
+                                                                    13 &&
+                                                                settings.day >
+                                                                    0 &&
+                                                                settings.month <
+                                                                    31 &&
+                                                                settings.year >
+                                                                    1900 &&
+                                                                settings.degree
+                                                                    .isNotEmpty &&
+                                                                settings.email
+                                                                    .contains(
+                                                                        "@") &&
+                                                                settings.email
+                                                                    .contains(
+                                                                        ".") &&
+                                                                settings.last
+                                                                    .isNotEmpty &&
+                                                                settings.first
+                                                                    .isNotEmpty)
+                                                            ? 1.0
+                                                            : 0.4,
+                                                        duration: Duration(
+                                                            milliseconds: 400),
+                                                        child:
+                                                            AnimatedContainer(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  400),
+                                                          height: (menuItem ==
+                                                                  "student+")
+                                                              ? 30
+                                                              : 0,
+                                                          width: 90,
+                                                          color: (settings.month > 0 &&
+                                                                  settings.month <
+                                                                      13 &&
+                                                                  settings.day >
+                                                                      0 &&
+                                                                  settings.month <
+                                                                      31 &&
+                                                                  settings.year >
+                                                                      1900 &&
+                                                                  settings
+                                                                      .degree
+                                                                      .isNotEmpty &&
+                                                                  settings.email
+                                                                      .contains(
+                                                                          "@") &&
+                                                                  settings.email
+                                                                      .contains(
+                                                                          ".") &&
+                                                                  settings.last
+                                                                      .isNotEmpty &&
+                                                                  settings.first
+                                                                      .isNotEmpty)
+                                                              ? Colors.lime
+                                                              : Colors
+                                                                  .lime[200],
+                                                          child: Center(
+                                                            child: Icon(
+                                                              Icons.check,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
                                               SizedBox(
                                                 height: 4,
                                               ),
@@ -465,6 +631,15 @@ class _WrapperPageState extends State<WrapperPage> {
                                                             menuOpen =
                                                                 !menuOpen;
                                                           });
+                                                          if (menuItem ==
+                                                              "student+") {
+                                                            setState(() {
+                                                              menuItem =
+                                                                  "lecturer";
+                                                            });
+                                                            settings
+                                                                .clearStudent();
+                                                          }
                                                         },
                                                         child: Icon(
                                                           (menuOpen)
@@ -477,7 +652,7 @@ class _WrapperPageState extends State<WrapperPage> {
                                                     ),
                                                   ),
                                                 ],
-                                              ),
+                                              )
                                             ],
                                           ),
                                         ),
